@@ -104,16 +104,15 @@ function determineWinner() {
     } else if(diff === 1) {
         // i win
         wins++;
-        renderScoreboard();
         msg.html("You win!");
     } else {
         // they win
         losses++;
-        renderScoreboard();
         msg.html("You Lose!");
     }
 
     // reset for next round;
+    renderScoreboard();
     myChoice = null;
     theirChoice = null;
     selectBtn.prop("disabled", false);
@@ -137,10 +136,12 @@ db.ref("/rps/1").on("child_added", choiceListener(1));
 
 $(document).on("click", "#send-btn", function(e) {
     e.preventDefault();
+    if(!inGame) return;
+
     let sendTxt = $("#send-input").val().trim();
     $("#send-input").val("");
     if(sendTxt !== "") {
-        db.ref("/chat").push(playerId + ": " + sendTxt + "\n");
+        db.ref("/chat").push("Player " + playerId + ": " + sendTxt + "\n");
     }
 })
 
